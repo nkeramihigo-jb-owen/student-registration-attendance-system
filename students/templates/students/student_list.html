@@ -1,0 +1,144 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Registered Students</title>
+
+    <link rel="stylesheet" href="{% static 'students/css/style.css' %}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            Student System
+        </div>
+
+        <a href="/" class="admin-link">
+            Home
+        </a>
+    </nav>
+
+
+    <main class="students-container">
+
+        <h1>Registered Students</h1>
+
+        <p class="page-description">
+            View all students registered in the system.
+        </p>
+
+
+        <div class="students-table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Registration No.</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Course</th>
+                        <th>Room</th>
+                        <th>Date</th>
+                        <th>Entry</th>
+                        <th>Exit</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for student in students %}
+
+                    <tr>
+
+                        <td>
+                            <a href="{% url 'student_detail' student.id %}" class="student-link">
+                                {{ student.registration_number }}
+                            </a>
+                        </td>
+
+                        <td>
+                            {{ student.first_name }}
+                            {{ student.last_name }}
+                        </td>
+
+                        <td>{{ student.email }}</td>
+
+                        <td>{{ student.phone }}</td>
+
+                        <td>
+                            {{ student.course.course_code }}
+                        </td>
+
+                        {% with attendance=student.attendance_records.last %}
+
+                            {% if attendance %}
+
+                                <td>
+                                    {{ attendance.room.room_number }}
+                                </td>
+
+                                <td>
+                                    {{ attendance.date }}
+                                </td>
+
+                                <td>
+                                    {{ attendance.entry_time|date:"H:i" }}
+                                </td>
+
+                                <td>
+                            {% if attendance.exit_time %}
+
+                                    {{ attendance.exit_time|date:"H:i" }}
+
+                            {% else %}
+
+                                    <span class="present-status">
+                                        Present
+                                    </span>
+
+                                    <a href="{% url 'record_exit' attendance.id %}" class="exit-btn">
+                                        Record Exit
+                                    </a>
+
+                            {% endif %}
+                                </td>
+
+                            {% else %}
+
+                                <td colspan="4">
+                                    No attendance recorded
+                                </td>
+
+                            {% endif %}
+
+                        {% endwith %}
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="9">
+                            No students have been registered yet.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

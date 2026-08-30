@@ -1,0 +1,122 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Attendance</title>
+
+    <link rel="stylesheet" href="{% static 'students/css/style.css' %}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="logo">
+            Student System
+        </div>
+
+        <a href="/" class="admin-link">
+            Home
+        </a>
+
+    </nav>
+
+
+    <main class="attendance-container">
+
+        <div class="attendance-card">
+
+            <h1>Record Attendance</h1>
+
+            <p class="form-description">
+                Select a student and their current room to record entry.
+            </p>
+
+
+            <form method="POST">
+
+                {% if error %}
+                    <div class="error-message">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                {% csrf_token %}
+
+
+                <div class="form-group">
+
+                    <label for="student">
+                        Student
+                    </label>
+
+                    <select id="student" name="student" required>
+
+                        <option value="">
+                            -- Select Student --
+                        </option>
+
+                        {% for student in students %}
+
+                            <option value="{{ student.id }}">
+                                {{ student.registration_number }}
+                                -
+                                {{ student.first_name }}
+                                {{ student.last_name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="room">
+                        Room
+                    </label>
+
+                    <select id="room" name="room" required>
+
+                        <option value="">
+                            -- Select Room --
+                        </option>
+
+                        {% for room in rooms %}
+
+                            <option value="{{ room.id }}">
+                                {{ room.building }}
+                                -
+                                Room {{ room.room_number }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <button type="submit" class="register-btn">
+                    Record Entry
+                </button>
+
+            </form>
+
+
+            <a href="/students/" class="back-link">
+                ← View Registered Students
+            </a>
+
+        </div>
+
+    </main>
+
+</body>
+</html>
